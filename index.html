@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style> 
+input[type=text] {
+	width: 30%;
+	height:5%;
+	padding: 20px;
+	box-sizing: border-box;
+	border: 2px solid blue;
+	border-radius: 8px;
+	text-align:center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	background-color: #C0FFFF;
+	font-size:40px;
+	color:#003a80;
+	font-family: Impact, Charcoal, sans-serif;
+	outline: none;
+}
+p {
+	position: absolute;
+	top: 55%;
+	left: 50%;
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+	font-size:40px;
+	color:#1c56ba;
+	font-family: Impact, Charcoal, sans-serif;
+	outline: none;
+	white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+	<input type="text" id="name" oninput=input() autofocus autocomplete="off">
+	<p>Your classics is 33.33% likely to be today.</p>
+	<!-- <p>Your birthday is 33.33% likely to be today.</p> -->
+<script>
+	function input() {
+		let text = document.getElementById("name");
+		let p=text.selectionStart;text.value=text.value.toUpperCase();text.setSelectionRange(p, p);
+		text = text.innerText;
+	}
+</script>
+
+</body>
+</html>
