@@ -5,7 +5,7 @@
 	<style>
 		input[type=text] {
 			width: 30%;
-			height: 5%;
+			height: 9%;
 			padding: 20px;
 			box-sizing: border-box;
 			border: 2px solid blue;
@@ -38,6 +38,13 @@
 			font-weight: 900;
 			white-space: nowrap;
 		}
+		.hash {
+			top: 57%;
+			left: 50%;
+			font-size: 10px;
+			color: #3e5783;
+			font-weight: 200;
+		}
 		button {
 			border: 2px solid #0066cc;
 			background-color: #0254ce;
@@ -62,7 +69,7 @@
 		}
 
 		button:disabled,
-		button[disabled]{
+		button[disabled] {
 			border: 1px solid #999999;
 			background-color: #cccccc;
 			color: #666666;
@@ -72,37 +79,12 @@
 
 <body>
 
-	<input type="text" id="name" oninput=input() autofocus autocomplete="off" maxlength="100">
+	<input type="text" id="name" autofocus autocomplete="off" maxlength="16000">
 	<p>Your classics is 33.33% likely to be today.</p>
-	<button id="celebrate" onclick="document.getElementById('celebrate').disabled = !document.getElementById('celebrate').dsabled"> Celebrate!</button>
 	<!-- <p>Your birthday is 33.33% likely to be today.</p> -->
-	<script>
-		function input() {
-			let text = document.getElementById("name");
-			let p = text.selectionStart; text.value = text.value.toUpperCase(); text.setSelectionRange(p, p);
-			text = text.innerText;
-			const memory = new WebAssembly.Memory({
-				initial: 1,
-				maximum: 1
-			});
-
-			function consoleLogOne(log) {
-				console.log(log);
-			}
-			const imports = {
-				env: {
-					memory: memory,
-					log: consoleLogOne
-				}
-			};
-
-
-			WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
-				.then(results => {
-					;
-				});
-	}
-	</script>
+	<p class="hash" id="hash">252f10c83610ebca1a059c0bae8255eba2f95be4d1d7bcfa89d7248a82d9f111</p>
+	<button id="celebrate" onclick=celebrate() disabled> Celebrate!</button>
+	<script src="shacalc.js"></script>
 
 </body>
 
