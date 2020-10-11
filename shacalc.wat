@@ -190,7 +190,14 @@
 	(local $ch  i32)
 	(local $maj i32)
 	(local $temp1 i32) (local $temp2 i32)
+	(local $i i32) (local $j i32) ;; use j for chunk, so more consistent
 	(call $initround)
 	(call $log (local.get $S0))
-	)
+	(block (loop ;; chunk loop
+		(call $log (i32.const 420))
+	;; (br 0)
+		(local.set $j (i32.add (local.get $j) (i32.const 1)))
+		(br_if 0 (i32.lt_u (local.get $j) (local.get $chunks)))
+	)) ;; end chunk loop
+)
 ) ;;module end
