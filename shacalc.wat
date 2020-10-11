@@ -1,9 +1,10 @@
 (module ;;module start
 (import "env" "memory" (memory 1))
 (import "env" "log" (func $log (param i32)))
-(export "init" (func $init))
+;; (export "init" (func $initround))
+(export "sha" (func $sha))
 ;;initialize the round constant array
-(func $init 
+(func $initround 
 	(local $i i32)
 	(local.set $i (i32.const 65536))
 	(i32.store (local.get $i) (i32.const 1116352408))
@@ -141,32 +142,55 @@
 	(local.set $i (i32.add (local.get $i) (i32.const 4)))
 	(i32.store (local.get $i) (i32.const 3329325298))
 
-	(call $log (local.get $i))
-	(call $log (i32.load (local.get $i)))
+	;; (call $log (local.get $i))
+	;; (call $log (i32.load (local.get $i)))
 )
 ;;read the round constant array
-
-;;write the round constant array
-
+(func $readround (param $index i32) (result i32)
+	;;65536 is the bitwise location, so 8192 is the byte location
+	(i32.load (i32.add (i32.const 8192) (i32.mul (local.get $index) (i32.const 4))))
+)
 ;;read the msg array
-
+(func $readmsg (param $index i32) (result i32)
+	(i32.load (i32.add (i32.const 8448) (i32.mul (local.get $index) (i32.const 4))))
+)
 ;;write the msg array
+(func $writemsg (param $index i32) (param $value i32)
+	(i32.store (i32.add (i32.const 8448) (i32.mul (local.get $index) (i32.const 4))) (local.get $value))
+)
+;;write the output 
+(func $writeout (param $h0 i32) (param $h1 i32) (param $h2 i32) (param $h3 i32) (param $h4 i32) (param $h5 i32) (param $h6 i32) (param $h7 i32)
+	(local $i i32)
+	(local.set $i (i32.const 8704))
+	(i32.store (local.get $i) (local.get $h0))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h1))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h2))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h3))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h4))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h5))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h6))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+	(i32.store (local.get $i) (local.get $h7))
+	(local.set $i (i32.add (local.get $i) (i32.const 4)))
+)
+
 
 ;;calculates sha256 of input string
-(func $sha (param $num1 f64) (param $num2 f64) (result f64)
-(local $h1  i32)
-(local $a   i32)
-(local $s0  i32)
-(local $S0  i32)
-(local $ch  i32)
-(local $maj i32)
-(local $temp1 i32)
-(local $temp2 i32)
-	(f64.add
-		(local.get $num1)
-		(local.get $num2)
+(func $sha (param $chunks i32)
+	(local $h0  i32) (local $h1  i32) (local $h2  i32) (local $h3  i32) (local $h4  i32) (local $h5  i32) (local $h6  i32) (local $h7  i32)
+	(local $a   i32) (local $b   i32) (local $c   i32) (local $d   i32) (local $e   i32) (local $f   i32) (local $g   i32) (local $h   i32)
+	(local $s0  i32) (local $s1  i32)
+	(local $S0  i32) (local $S1  i32)
+	(local $ch  i32)
+	(local $maj i32)
+	(local $temp1 i32) (local $temp2 i32)
+	(call $initround)
+	(call $log (local.get $S0))
 	)
-	(f64.const 2)
-	(f64.div)
-)
 ) ;;module end

@@ -16,7 +16,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 	.then(results => {
 		var arrayview = new Uint8Array(imports.env.memory.buffer);
 		function input(e) {
-			// let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
+			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			textcontent = this.value;
 			var utf8 = unescape(encodeURIComponent(textcontent));
 			console.log(textcontent);
@@ -61,8 +61,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			console.log(arrayview[i+j+8]);
 			console.log("63",arrayview[63]);
 			console.log("64",arrayview[64]);
-			console.log("INIT: "); 
-			results.instance.exports.init();
+			console.log("Wasm");
+			results.instance.exports.sha();
 		}
 		document.getElementById("name").addEventListener('input', input);
 	}
