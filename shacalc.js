@@ -62,7 +62,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			console.log("63",arrayview[63]);
 			console.log("64",arrayview[64]);
 			console.log("Wasm");
-			results.instance.exports.sha();
+			results.instance.exports.sha(1);
 		}
 		document.getElementById("name").addEventListener('input', input);
 	}
