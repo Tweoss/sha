@@ -231,7 +231,7 @@
 					(i32.add)
 				(i32.add)
 			(call $writemsg (local.get $i))
-			(br_if (i32.lt_u (local.get $i) (i32.const 64)))
+			(br_if 0 (i32.lt_u (local.get $i) (i32.const 64)))
 			;; for i from 16 to 63
 			;; 		s0 := (w[i-15] rightrotate  7) xor (w[i-15] rightrotate 18) xor (w[i-15] rightshift  3)
 			;; 		s1 := (w[i- 2] rightrotate 17) xor (w[i- 2] rightrotate 19) xor (w[i- 2] rightshift 10)
