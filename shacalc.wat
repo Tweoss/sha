@@ -182,6 +182,25 @@
 	(local.set $i (i32.add (local.get $i) (i32.const 4)))
 )
 
+;;reverses every i32 for every chunk
+(func $rev (param $chunks i32)
+	(local $i i32)
+	(local $0 i32) (local $1 i32) (local $2 i32) (local $3 i32) (local $4 i32)
+	(block(loop
+		(local.set $0 (i32.load (i32.mul (local.get $i) (i32.const 4))))
+		(local.set $1 (i32.shl (i32.shr_u (i32.shl (local.get $0) (i32.const 0)) (i32.const 24)) (i32.const 0)))
+		(local.set $2 (i32.shl (i32.shr_u (i32.shl (local.get $0) (i32.const 8)) (i32.const 16)) (i32.const 8)))
+		(local.set $3 (i32.shl (i32.shr_u (i32.shl (local.get $0) (i32.const 16)) (i32.const 8)) (i32.const 16)))
+		(local.set $4 (i32.shl (i32.shr_u (i32.shl (local.get $0) (i32.const 24)) (i32.const 0)) (i32.const 24)))
+		(i32.store (i32.mul (local.get $i) (i32.const 4)) (i32.or (i32.or (local.get $1) (local.get $2)) (i32.or (local.get $3) (local.get $4))))
+		(local.set $i (i32.add (local.get $i) (i32.const 1)))
+		(call $log (i32.const 420))
+		(call $log (local.get $0))
+		(call $log (i32.or (i32.or (local.get $1) (local.get $2)) (i32.or (local.get $3) (local.get $4))))
+		(br_if 0 (i32.lt_u (local.get $i) (i32.mul (local.get $chunks) (i32.const 16))))
+	))
+)
+
 
 ;;calculates sha256 of input string
 (func $sha (param $chunks i32)
@@ -194,6 +213,7 @@
 	(local $temp1 i32) (local $temp2 i32)
 	(local $i i32) (local $j i32) ;; use j for chunk, so more consistent
 	(call $initround)
+	(call $rev (local.get $chunks))
 	(local.set $h0 (i32.const 1779033703)) (local.set $h1 (i32.const 3144134277)) (local.set $h2 (i32.const 1013904242)) (local.set $h3 (i32.const 2773480762)) (local.set $h4 (i32.const 1359893119)) (local.set $h5 (i32.const 2600822924)) (local.set $h6 (i32.const 528734635)) (local.set $h7 (i32.const 1541459225))
 	;; ;; (call $log (local.get $S0))
 	(local.set $j (i32.const 0))

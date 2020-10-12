@@ -19,27 +19,36 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			// let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			textcontent = this.value;
 			var utf8 = unescape(encodeURIComponent(textcontent));
-			// console.log(textcontent);
-			// for (var i = 0; i < utf8.length; i++) {
-			// 	arrayview[i] = (utf8.charCodeAt(i));
-			// }
+			console.log("Textcontent",textcontent);
+			console.log("utf8",utf8);
+			utf8 += String.fromCharCode(0x80);
+			for (var i = 0; i < utf8.length; i++) {
+				arrayview[i] = (utf8.charCodeAt(i));
+			}
 			// for (var i = 0; i < utf8.length; i+=4) {
 			// 	// arrayview[i] = (utf8.charCodeAt(i));
 			// 	arrayview[i+0] = (utf8.charCodeAt(i+3)>>0);
 			// 	arrayview[i+1] = (utf8.charCodeAt(i+2)>>0);
 			// 	arrayview[i+2] = (utf8.charCodeAt(i+1)>>0);
-				// arrayview[i+3] = (utf8.charCodeAt(i+0)>>0);
+			// 	arrayview[i+3] = (utf8.charCodeAt(i+0)>>0);
 			// }
 			console.log("CHaracter", arrayview[0]);	
+			console.log("CHaracter", arrayview[1]);	
+			console.log("CHaracter", arrayview[2]);	
+			console.log("CHaracter", arrayview[3]);	
 			// i++;
-			arrayview[3] = 0b10000000; 
-			i++;
+			// arrayview[3] = 0b10000000; 
+			// i++;
 			// console.log("i is", i);
-			let l = utf8.length; //! SLIGHTLY CONFUSED ABOUT +1
+			let l = utf8.length-1; //! SLIGHTLY CONFUSED ABOUT +1
 			for (var j = 0; j < 512/8-(i + 1 + 64/8)%(512/8); j++) {
 				arrayview[i+j] = 0;
 				
 			}
+			console.log("CHaracter", arrayview[0]);	
+			console.log("CHaracter", arrayview[1]);	
+			console.log("CHaracter", arrayview[2]);	
+			console.log("CHaracter", arrayview[3]);	
 			// console.log("j is", j);
 			//* one page of wasm memory is 64KiB or 64*1024=65,536
 			//* each character can be up to 4 bytes -> 16,000 characters
@@ -53,10 +62,12 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			arrayview[i+j+3] = 	0;
 			arrayview[i+j+4] = 	0;
 			arrayview[i+j+5] = 	0;
-			arrayview[i+j+6] = 	(l & 0x00FF0000) >> 16;
-			arrayview[i+j+7] = 	(l & 0x0000FF00) >> 8;
+			arrayview[i+j+6] = 	(l & 0x0000FF00) >> 8;
+			arrayview[i+j+7] = 	(l & 0x00FF0000) >> 16;
+			arrayview[i+j+8] = 	0;
 			arrayview[i+j+8] = 	(l & 0x000000FF);
-
+			// arrayview[i+j+1] = 	(l & 0x000000FF);
+			
 			// console.log("The first byte in the array is ",arrayview[0]);
 			// console.log(arrayview[0]); console.log(arrayview[1]); console.log(arrayview[2]); console.log(arrayview[3]); console.log(arrayview[4]); console.log(arrayview[5]);
 			// console.log("There are ",i," bytes of characters");
