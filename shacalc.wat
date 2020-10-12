@@ -1,12 +1,12 @@
 (module ;;module start
-(import "env" "memory" (memory 1))
+(import "env" "memory" (memory 3))
 (import "env" "log" (func $log (param i32)))
 ;; (export "init" (func $initround))
 (export "sha" (func $sha))
 ;;initialize the round constant array
 (func $initround 
 	(local $i i32)
-	(local.set $i (i32.const 65536))
+	(local.set $i (i32.const 8192))
 	(i32.store (local.get $i) (i32.const 1116352408))
 	(local.set $i (i32.add (local.get $i) (i32.const 4)))
 	(i32.store (local.get $i) (i32.const 1899447441))
@@ -70,7 +70,7 @@
 	(local.set $i (i32.add (local.get $i) (i32.const 4)))
 	(i32.store (local.get $i) (i32.const 3584528711))
 	(local.set $i (i32.add (local.get $i) (i32.const 4)))
-	(i32.store (local.get $i) (i32.const 3584528711))
+	(i32.store (local.get $i) (i32.const 113926993))
 	(local.set $i (i32.add (local.get $i) (i32.const 4)))
 	(i32.store (local.get $i) (i32.const 338241895))
 
@@ -156,6 +156,8 @@
 )
 ;;write the msg array (works like a normal array not by bytes)
 (func $writemsg (param $index i32) (param $value i32)
+	;; (call $log (i32.const 421))
+	;; (call $log (local.get $index))
 	(i32.store (i32.add (i32.const 8448) (i32.mul (local.get $index) (i32.const 4))) (local.get $value))
 )
 ;;write the output 
@@ -201,7 +203,9 @@
 		;; copy the chunk into the message array
 		(local.set $i (i32.const 0))
 		(block (loop
-			(call $writemsg (local.get $i) (i32.load (i32.mul (local.get $i) (i32.const 4))))
+			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
+			;; (call $log (local.get $i))
+			(call $writemsg (local.get $i) (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4))))
 			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
 			;; (call $log (call $readmsg (local.get $i)))
 			(local.set $i (i32.add (local.get $i) (i32.const 1)))
@@ -223,6 +227,7 @@
 					(i32.shr_u (call $readmsg (i32.sub (local.get $i) (i32.const 2))) (i32.const 10))
 				(i32.xor)
 			(local.set $s1)
+			(local.get $i)
 						(call $readmsg (i32.sub (local.get $i) (i32.const 16)))
 						(local.get $s0)
 					(i32.add)
@@ -230,7 +235,8 @@
 						(local.get $s1)
 					(i32.add)
 				(i32.add)
-			(call $writemsg (local.get $i))
+			(call $writemsg)
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
 			(br_if 0 (i32.lt_u (local.get $i) (i32.const 64)))
 			;; for i from 16 to 63
 			;; 		s0 := (w[i-15] rightrotate  7) xor (w[i-15] rightrotate 18) xor (w[i-15] rightshift  3)
@@ -239,17 +245,103 @@
 		))
 
 		;; Initialize working variables to current hash value:
-		;; a := h0
-		;; b := h1
-		;; c := h2
-		;; d := h3
-		;; e := h4
-		;; f := h5
-		;; g := h6
-		;; h := h7
+		(local.set $a (local.get $h0))
+		(local.set $b (local.get $h1))
+		(local.set $c (local.get $h2))
+		(local.set $d (local.get $h3))
+		(local.set $e (local.get $h4))
+		(local.set $f (local.get $h5))
+		(local.set $g (local.get $h6))
+		(local.set $h (local.get $h7))
+
+		(local.set $i (i32.const 0))
+		(block(loop 
+						(i32.rotr (local.get $e) (i32.const 6))
+						(i32.rotr (local.get $e) (i32.const 11))
+					(i32.xor)
+					(i32.rotr (local.get $e) (i32.const 25))
+				(i32.xor)
+			(local.set $S1)
+						(local.get $e)
+						(local.get $f)
+					(i32.and)
+							(local.get $e)
+							(i32.const 4294967295) ;; flips every bit
+						(i32.xor)
+						(local.get $g)
+					(i32.and)
+				(i32.xor)
+			(local.set $ch)
+							(local.get $h)
+							(local.get $S1)
+						(i32.add)
+							(local.get $ch)
+							(call $readround (local.get $i))
+						(i32.add)
+					(i32.add)
+					(call $readmsg (local.get $i))
+				(i32.add)
+			(local.set $temp1)
+						(i32.rotr (local.get $a) (i32.const 2))
+						(i32.rotr (local.get $a) (i32.const 13))
+					(i32.xor)
+					(i32.rotr (local.get $a) (i32.const 22))
+				(i32.xor)
+			(local.set $S0)
+							(local.get $a)
+							(local.get $b)
+						(i32.and)
+							(local.get $a)
+							(local.get $c)
+						(i32.and)
+					(i32.xor)
+						(local.get $b)
+						(local.get $c)
+					(i32.and)
+				(i32.xor)
+			(local.set $maj)
+			(local.set $temp2 (i32.add (local.get $S0) (local.get $maj)))
+
+			(local.set $h (local.get $g))
+			(local.set $g (local.get $f))
+			(local.set $f (local.get $e))
+			(local.set $e (i32.add (local.get $d) (local.get $temp1)))
+			(local.set $d (local.get $c))
+			(local.set $c (local.get $b))
+			(local.set $b (local.get $a))
+			(local.set $a (i32.add (local.get $temp1) (local.get $temp2)))
+			;; for i from 0 to 63
+			;; 	S1 := (e rightrotate 6) xor (e rightrotate 11) xor (e rightrotate 25)
+			;; 	ch := (e and f) xor ((not e) and g)
+			;; 	temp1 := h + S1 + ch + k[i] + w[i]
+			;; 	S0 := (a rightrotate 2) xor (a rightrotate 13) xor (a rightrotate 22)
+			;; 	maj := (a and b) xor (a and c) xor (b and c)
+			;; 	temp2 := S0 + maj 
+			;; 
+			;; h := g
+			;; g := f
+			;; f := e
+			;; e := d + temp1
+			;; d := c
+			;; c := b
+			;; b := a
+			;; a := temp1 + temp2
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
+			(br_if 0 (i32.lt_u (local.get $i) (i32.const 64)))
+		))
+	
+		(local.set $h0 (i32.add (local.get $h0) (local.get $a)))
+		(local.set $h1 (i32.add (local.get $h1) (local.get $b)))
+		(local.set $h2 (i32.add (local.get $h2) (local.get $c)))
+		(local.set $h3 (i32.add (local.get $h3) (local.get $d)))
+		(local.set $h4 (i32.add (local.get $h4) (local.get $e)))
+		(local.set $h5 (i32.add (local.get $h5) (local.get $f)))
+		(local.set $h6 (i32.add (local.get $h6) (local.get $g)))
+		(local.set $h7 (i32.add (local.get $h7) (local.get $h)))
 
 		(local.set $j (i32.add (local.get $j) (i32.const 1)))
 		(br_if 0 (i32.lt_u (local.get $j) (local.get $chunks)))
 	)) ;; end chunk loop
+	(call $writeout (local.get $h0) (local.get $h1) (local.get $h2) (local.get $h3) (local.get $h4) (local.get $h5) (local.get $h6) (local.get $h7))
 )
 ) ;;module end
