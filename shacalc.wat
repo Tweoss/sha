@@ -145,16 +145,16 @@
 	;; (call $log (local.get $i))
 	;; (call $log (i32.load (local.get $i)))
 )
-;;read the round constant array
+;;read the round constant array (works like a normal array not by bytes)
 (func $readround (param $index i32) (result i32)
 	;;65536 is the bitwise location, so 8192 is the byte location
 	(i32.load (i32.add (i32.const 8192) (i32.mul (local.get $index) (i32.const 4))))
 )
-;;read the msg array
+;;read the msg array (works like a normal array not by bytes)
 (func $readmsg (param $index i32) (result i32)
 	(i32.load (i32.add (i32.const 8448) (i32.mul (local.get $index) (i32.const 4))))
 )
-;;write the msg array
+;;write the msg array (works like a normal array not by bytes)
 (func $writemsg (param $index i32) (param $value i32)
 	(i32.store (i32.add (i32.const 8448) (i32.mul (local.get $index) (i32.const 4))) (local.get $value))
 )
@@ -192,10 +192,62 @@
 	(local $temp1 i32) (local $temp2 i32)
 	(local $i i32) (local $j i32) ;; use j for chunk, so more consistent
 	(call $initround)
-	(call $log (local.get $S0))
+	(local.set $h0 (i32.const 1779033703)) (local.set $h1 (i32.const 3144134277)) (local.set $h2 (i32.const 1013904242)) (local.set $h3 (i32.const 2773480762)) (local.set $h4 (i32.const 1359893119)) (local.set $h5 (i32.const 2600822924)) (local.set $h6 (i32.const 528734635)) (local.set $h7 (i32.const 1541459225))
+	;; ;; (call $log (local.get $S0))
+	(local.set $j (i32.const 0))
 	(block (loop ;; chunk loop
-		(call $log (i32.const 420))
-	;; (br 0)
+		;; (call $log (i32.const 420))
+
+		;; copy the chunk into the message array
+		(local.set $i (i32.const 0))
+		(block (loop
+			(call $writemsg (local.get $i) (i32.load (i32.mul (local.get $i) (i32.const 4))))
+			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
+			;; (call $log (call $readmsg (local.get $i)))
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
+			(br_if 0 (i32.lt_u (local.get $i) (i32.const 16)))
+		))
+
+		;; Extend the first 16 words into the remaining 48 words w[16..63] of the message schedule array:
+		(local.set $i (i32.const 16))
+		(block (loop
+						(i32.rotr (call $readmsg (i32.sub (local.get $i) (i32.const 15))) (i32.const 7))
+						(i32.rotr (call $readmsg (i32.sub (local.get $i) (i32.const 15))) (i32.const 18))
+					(i32.xor)
+					(i32.shr_u (call $readmsg (i32.sub (local.get $i) (i32.const 15))) (i32.const 3))
+				(i32.xor)
+			(local.set $s0)
+						(i32.rotr (call $readmsg (i32.sub (local.get $i) (i32.const 2))) (i32.const 17))
+						(i32.rotr (call $readmsg (i32.sub (local.get $i) (i32.const 2))) (i32.const 19))
+					(i32.xor)
+					(i32.shr_u (call $readmsg (i32.sub (local.get $i) (i32.const 2))) (i32.const 10))
+				(i32.xor)
+			(local.set $s1)
+						(call $readmsg (i32.sub (local.get $i) (i32.const 16)))
+						(local.get $s0)
+					(i32.add)
+						(call $readmsg (i32.sub (local.get $i) (i32.const 7)))
+						(local.get $s1)
+					(i32.add)
+				(i32.add)
+			(call $writemsg (local.get $i))
+			(br_if (i32.lt_u (local.get $i) (i32.const 64)))
+			;; for i from 16 to 63
+			;; 		s0 := (w[i-15] rightrotate  7) xor (w[i-15] rightrotate 18) xor (w[i-15] rightshift  3)
+			;; 		s1 := (w[i- 2] rightrotate 17) xor (w[i- 2] rightrotate 19) xor (w[i- 2] rightshift 10)
+			;; 		w[i] := w[i-16] + s0 + w[i-7] + s1
+		))
+
+		;; Initialize working variables to current hash value:
+		;; a := h0
+		;; b := h1
+		;; c := h2
+		;; d := h3
+		;; e := h4
+		;; f := h5
+		;; g := h6
+		;; h := h7
+
 		(local.set $j (i32.add (local.get $j) (i32.const 1)))
 		(br_if 0 (i32.lt_u (local.get $j) (local.get $chunks)))
 	)) ;; end chunk loop
