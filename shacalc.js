@@ -47,13 +47,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			arrayview[i+j+8] = 	(l & 0x000000FF);
 
 			console.log("The first byte in the array is ",arrayview[0]);
-			console.log(arrayview[0]);
-			console.log(arrayview[1]);
-			console.log(arrayview[2]);
-			console.log(arrayview[3]);
-			console.log(arrayview[4]);
-			console.log(arrayview[5]);
-			console.log("HI");
+			console.log(arrayview[0]); console.log(arrayview[1]); console.log(arrayview[2]); console.log(arrayview[3]); console.log(arrayview[4]); console.log(arrayview[5]);
 			console.log("There are ",i-1," characters");
 			console.log(i+j+8);
 			console.log("There are ",j + 1," bytes of spaces");
@@ -61,8 +55,10 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			console.log(arrayview[i+j+8]);
 			console.log("63",arrayview[63]);
 			console.log("64",arrayview[64]);
-			console.log("Wasm");
-			results.instance.exports.sha(1);
+			console.log("Wasm"); 
+			//* i+j+8 is address of the last byte, so the number of 512 bit chunks is
+			//* (i+j+8+1)*8/512
+			results.instance.exports.sha(((i+j+8)+1)*8/512);
 		}
 		document.getElementById("name").addEventListener('input', input);
 	}
