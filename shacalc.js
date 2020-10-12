@@ -1,6 +1,6 @@
 const memory = new WebAssembly.Memory({
-	initial: 3,
-	maximum: 3
+	initial: 2,
+	maximum: 2
 });
 function consoleLogOne(log) {
 	console.log(log);
@@ -16,15 +16,23 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 	.then(results => {
 		var arrayview = new Uint8Array(imports.env.memory.buffer);
 		function input(e) {
-			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
+			// let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			textcontent = this.value;
 			var utf8 = unescape(encodeURIComponent(textcontent));
 			// console.log(textcontent);
-			for (var i = 0; i < utf8.length; i++) {
-				arrayview[i] = (utf8.charCodeAt(i));
-			}
+			// for (var i = 0; i < utf8.length; i++) {
+			// 	arrayview[i] = (utf8.charCodeAt(i));
+			// }
+			// for (var i = 0; i < utf8.length; i+=4) {
+			// 	// arrayview[i] = (utf8.charCodeAt(i));
+			// 	arrayview[i+0] = (utf8.charCodeAt(i+3)>>0);
+			// 	arrayview[i+1] = (utf8.charCodeAt(i+2)>>0);
+			// 	arrayview[i+2] = (utf8.charCodeAt(i+1)>>0);
+				// arrayview[i+3] = (utf8.charCodeAt(i+0)>>0);
+			// }
+			console.log("CHaracter", arrayview[0]);	
 			// i++;
-			arrayview[i] = 0b10000000; 
+			arrayview[3] = 0b10000000; 
 			i++;
 			// console.log("i is", i);
 			let l = utf8.length; //! SLIGHTLY CONFUSED ABOUT +1
@@ -57,10 +65,14 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			// console.log("Wasm"); 
 			//* i+j+8 is address of the last byte, so the number of 512 bit chunks is
 			//* (i+j+8+1)*8/512
-			results.instance.exports.sha(1);
-			// results.instance.exports.sha(((i+j+8)+1)*8/512);
+			// results.instance.exports.sha(1);
+			results.instance.exports.sha(((i+j+8)+1)*8/512);
 			let string = "";
-			for (var i = 0; i < 32; i++) {
+			for (var i = 0; i < 32; i+=4) {
+				// // console.log(arrayview[8704+i].toString(2).padStart(8, "0"))
+				string = string + (arrayview[8704+i+3]).toString(16).padStart(2, "0");
+				string = string + (arrayview[8704+i+2]).toString(16).padStart(2, "0");
+				string = string + (arrayview[8704+i+1]).toString(16).padStart(2, "0");
 				string = string + (arrayview[8704+i]).toString(16).padStart(2, "0");
 			}
 			console.log(string);

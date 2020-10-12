@@ -1,5 +1,5 @@
 (module ;;module start
-(import "env" "memory" (memory 3))
+(import "env" "memory" (memory 2))
 (import "env" "log" (func $log (param i32)))
 ;; (export "init" (func $initround))
 (export "sha" (func $sha))
@@ -203,8 +203,9 @@
 		;; copy the chunk into the message array
 		(local.set $i (i32.const 0))
 		(block (loop
+			(call $log (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4)))
 			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
-			;; (call $log (local.get $i))
+			(call $log (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4))))
 			(call $writemsg (local.get $i) (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4))))
 			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
 			;; (call $log (call $readmsg (local.get $i)))
