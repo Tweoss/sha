@@ -38,6 +38,7 @@
 			font-weight: 900;
 			white-space: nowrap;
 		}
+
 		.hash {
 			top: 60%;
 			left: 50%;
@@ -45,6 +46,7 @@
 			color: #3e5783;
 			font-weight: 200;
 		}
+
 		button {
 			border: 2px solid #0066cc;
 			background-color: #0254ce;
@@ -85,14 +87,18 @@
 	<p class="hash" id="hash">252f10c83610ebca1a059c0bae8255eba2f95be4d1d7bcfa89d7248a82d9f111</p>
 	<!-- <button id="celebrate" onclick=celebrate() disabled> Celebrate!</button> -->
 	<script src="shacalc.js"></script>
+	<!-- <script src="tempsha.js"> -->
+	</script>
 	<script>
-		// var array = [1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];
-		// array.forEach(element => {
-		// 	element = element.toString(16);
-		// 	console.log(element.toString(16))
-		// });
-		
-		// // array.toString(16);
+		var array = [1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];
+		let string = "";
+		array.forEach(element => {
+			element = element.toString(16);
+			string += element.toString(16).padStart(8, "0");
+			// console.log(element.toString(16))
+		});
+		// console.log(string)
+		// array.toString(16);
 		// console.log(array);
 	</script>
 </body>
