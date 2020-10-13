@@ -156,8 +156,6 @@
 )
 ;;write the msg array (works like a normal array not by bytes)
 (func $writemsg (param $index i32) (param $value i32)
-	;; (call $log (i32.const 421))
-	;; (call $log (local.get $index))
 	(i32.store (i32.add (i32.const 8448) (i32.mul (local.get $index) (i32.const 4))) (local.get $value))
 )
 ;;write the output 
@@ -194,9 +192,6 @@
 		(local.set $4 (i32.shl (i32.load8_u (i32.add (i32.mul (local.get $i) (i32.const 4)) (i32.const 3))) (i32.const 0)))
 		(i32.store (i32.mul (local.get $i) (i32.const 4)) (i32.or (i32.or (local.get $1) (local.get $2)) (i32.or (local.get $3) (local.get $4))))
 		(local.set $i (i32.add (local.get $i) (i32.const 1)))
-		;; (call $log (i32.const 420))
-		;; (call $log (local.get $0))
-		;; (call $log (i32.or (i32.or (local.get $1) (local.get $2)) (i32.or (local.get $3) (local.get $4))))
 		(br_if 0 (i32.lt_u (local.get $i) (i32.mul (local.get $chunks) (i32.const 16))))
 	))
 )
@@ -223,12 +218,7 @@
 		;; copy the chunk into the message array
 		(local.set $i (i32.const 0))
 		(block (loop
-			;; (call $log (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4)))
-			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
-			;; (call $log (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4))))
 			(call $writemsg (local.get $i) (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 16)) (local.get $i)) (i32.const 4))))
-			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
-			;; (call $log (call $readmsg (local.get $i)))
 			(local.set $i (i32.add (local.get $i) (i32.const 1)))
 			(br_if 0 (i32.lt_u (local.get $i) (i32.const 16)))
 		))
