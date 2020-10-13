@@ -24,7 +24,9 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			utf8 += String.fromCharCode(0x80);
 			for (var i = 0; i < utf8.length; i++) {
 				arrayview[i] = (utf8.charCodeAt(i));
+				console.log("Changing ", i, " to ", utf8.charCodeAt(i))
 			}
+			console.log(arrayview[59])
 			// for (var i = 0; i < utf8.length; i+=4) {
 			// 	// arrayview[i] = (utf8.charCodeAt(i));
 			// 	arrayview[i+0] = (utf8.charCodeAt(i+3)>>0);
@@ -38,14 +40,10 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			// console.log("i is", i);
 			let l = utf8.length - 1;
 			for (var j = 0; j < 512 / 8 - (utf8.length + 64 / 8) % (512 / 8); j++) {
-				arrayview[i + j] = 0;
-				// console.log("j",j);
+				arrayview[utf8.length + j] = 0;
 			}
-			// console.log("CHaracter", arrayview[0]);
-			// console.log("CHaracter", arrayview[1]);
-			// console.log("CHaracter", arrayview[2]);
-			// console.log("CHaracter", arrayview[3]);
-			// console.log("j is", j);
+			//! 54 works, 55 does not
+			console.log(arrayview);
 			//* one page of wasm memory is 64KiB or 64*1024=65,536
 			//* each character can be up to 4 bytes -> 16,000 characters
 			//* the possible length in bits is 16,000*4bytes*4bits 

@@ -226,7 +226,7 @@
 			;; (call $log (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4)))
 			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
 			;; (call $log (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4))))
-			(call $writemsg (local.get $i) (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 64)) (local.get $i)) (i32.const 4))))
+			(call $writemsg (local.get $i) (i32.load (i32.mul (i32.add (i32.mul (local.get $j) (i32.const 16)) (local.get $i)) (i32.const 4))))
 			;; (call $log (i32.load (i32.mul (local.get $i) (i32.const 4))))
 			;; (call $log (call $readmsg (local.get $i)))
 			(local.set $i (i32.add (local.get $i) (i32.const 1)))
