@@ -19,8 +19,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			// let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			textcontent = this.value;
 			var utf8 = unescape(encodeURIComponent(textcontent));
-			console.log("Textcontent", textcontent);
-			console.log("utf8", utf8);
+			// console.log("Textcontent", textcontent);
+			// console.log("utf8", utf8);
 			utf8 += String.fromCharCode(0x80);
 			for (var i = 0; i < utf8.length; i++) {
 				arrayview[i] = (utf8.charCodeAt(i));
@@ -32,10 +32,6 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			// 	arrayview[i+2] = (utf8.charCodeAt(i+1)>>0);
 			// 	arrayview[i+3] = (utf8.charCodeAt(i+0)>>0);
 			// }
-			console.log("CHaracter", arrayview[0]);
-			console.log("CHaracter", arrayview[1]);
-			console.log("CHaracter", arrayview[2]);
-			console.log("CHaracter", arrayview[3]);
 			// i++;
 			// arrayview[3] = 0b10000000; 
 			// i++;
@@ -45,11 +41,11 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 				arrayview[i + j] = 0;
 				// console.log("j",j);
 			}
-			console.log("CHaracter", arrayview[0]);
-			console.log("CHaracter", arrayview[1]);
-			console.log("CHaracter", arrayview[2]);
-			console.log("CHaracter", arrayview[3]);
-			console.log("j is", j);
+			// console.log("CHaracter", arrayview[0]);
+			// console.log("CHaracter", arrayview[1]);
+			// console.log("CHaracter", arrayview[2]);
+			// console.log("CHaracter", arrayview[3]);
+			// console.log("j is", j);
 			//* one page of wasm memory is 64KiB or 64*1024=65,536
 			//* each character can be up to 4 bytes -> 16,000 characters
 			//* the possible length in bits is 16,000*4bytes*4bits 
@@ -63,43 +59,21 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			arrayview[i + j + 2] = 0;
 			arrayview[i + j + 3] = 0;
 			arrayview[i + j + 4] = 0;
-			arrayview[i + j + 5] = (l * 8 & 0x0000FF00) >> 8;
-			arrayview[i + j + 6] = (l * 8 & 0x00FF0000) >> 16;
-			arrayview[i + j + 7] = 0;
-			// arrayview[i+j+4] = 	(l & 0x000000FF);
+			arrayview[i + j + 5] = ((l * 8) & 0x00FF0000) >> 16;
+			arrayview[i + j + 6] = ((l * 8) & 0x0000FF00) >> 8;
 			arrayview[i + j + 7] = ((l * 8) & 0x000000FF);
-			// const lenLo = ((msg.length-1)*8) >>> 0;
-			// M[N-1][14] = Math.floor(lenHi);
-			// M[N-1][15] = lenLo;
-
-			// console.log("The first byte in the array is ",arrayview[0]);
-			// console.log(arrayview[0]); console.log(arrayview[1]); console.log(arrayview[2]); console.log(arrayview[3]); console.log(arrayview[4]); console.log(arrayview[5]);
-			// console.log("There are ",i," bytes of characters");
-			// console.log(i+j+8);
-			// console.log("There are ",j," bytes of spaces");
-			// console.log("Wasm"); 
 			//* i+j+8 is address of the last byte, so the number of 512 bit chunks is
 			//* (i+j+8+1)*8/512
-			// results.instance.exports.sha(1);
 			results.instance.exports.sha(((i + j + 8) + 1) * 8 / 512);
 			let string = "";
 			for (var i = 0; i < 32; i += 4) {
-				// // console.log(arrayview[8704+i].toString(2).padStart(8, "0"))
 				string = string + (arrayview[8704 + i + 3]).toString(16).padStart(2, "0");
 				string = string + (arrayview[8704 + i + 2]).toString(16).padStart(2, "0");
 				string = string + (arrayview[8704 + i + 1]).toString(16).padStart(2, "0");
 				string = string + (arrayview[8704 + i]).toString(16).padStart(2, "0");
 			}
 			console.log(string);
-			string = "";
-			for (var i = 0; i < 256; i += 4) {
-				// console.log((arrayview[8704+i]).toString(16));
-				string = string + (arrayview[8192 + i + 3]).toString(16).padStart(2, "0");
-				string = string + (arrayview[8192 + i + 2]).toString(16).padStart(2, "0");
-				string = string + (arrayview[8192 + i + 1]).toString(16).padStart(2, "0");
-				string = string + (arrayview[8192 + i]).toString(16).padStart(2, "0");
-			}
-			// console.log(string);
+			document.getElementById("hash").innerText = string;
 		}
 		document.getElementById("name").addEventListener('input', input);
 	}
