@@ -86,14 +86,17 @@ class Balloon {
 		this.y = canvas.height;
 		h += golden_ratio_conjugate; h %= 1;
 		this.color = hsv_to_rgb(h, 0.5, 0.95);
-		this.size = Math.random()*2+1;
-		this.direction = Math.random()*2-1;
-		this.upspeed = Math.random()*2+5;
+		this.size = Math.random()*1+2;
+		this.direction = Math.random()*3-1;
+		this.acceleration = 0;
+		this.jerk = 0;
+		this.upspeed = Math.random()*3+2;
 	}
 	move() {
 		var canvas = document.getElementById("drawingcanvas");
 		this.x += this.direction;
-		this.direction += Math.random()-0.5;
+		this.direction += .4*this.acceleration;
+		this.acceleration = Math.random() - 0.5;
 		this.x %= canvas.width;
 		this.y -= this.upspeed;
 	}
@@ -133,7 +136,7 @@ function hsv_to_rgb(h, s, v) {
 	return ("#" + Math.floor((r*256)).toString(16) + Math.floor((g*256)).toString(16) + Math.floor((b*256)).toString(16))
 }
 var ballArray = [];
-
+let isFirstClick = true;
 function celebrate(text) {
 	document.getElementById("name").remove();
 	document.getElementById("chance").remove();
@@ -150,32 +153,30 @@ function celebrate(text) {
 	my_gradient.addColorStop(1, "#274ed0");
 	ctx.fillStyle = my_gradient;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.save();
+	ctx.font = "50px Arial";
+	ctx.fillStyle = "#99b1ff";
+	ctx.textAlign = "center";
+
+	ctx.fillText("Click!", canvas.width/2, canvas.height/2);
 	//! DRAW "CLICK!"
 	ballArray.push(new Balloon());
-	let circle = new Balloon();
-	ctx.beginPath();
-	ctx.arc(circle.x, circle.y-20, 20, 0, 2 * Math.PI);
-	ctx.stroke();
 	var ctx = canvas.getContext('2d');
 	canvas.addEventListener("click",handleClick);
-	// var array = someArray.filter(function(el) { return el.Name != "Kristian"; }); 
-	animate();
 }
 
 function animate() {
 	var canvas = document.getElementById("drawingcanvas");		
 	var ctx = canvas.getContext("2d");
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.restore();
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.save();
+
 	for (let index = 0; index < ballArray.length; index++) {
 		ballArray[index].move();
-
-		ctx.beginPath();
-		ctx.arc(ballArray[index].x, ballArray[index].y-20, 20, 0, 2 * Math.PI);
-		ctx.stroke();
+		drawBloon(index);
 		if (ballArray[index].y < 0) {
 			ballArray.splice(index, 1);
-			console.log("test")
 		}
 		
 	}
@@ -185,33 +186,37 @@ let currentNote = 0;
 let soundarray = [];
 
 { //* Create the sound sources
-	soundarray.push(document.createElement("source")); soundarray[0].type = "audio/mpeg"; soundarray[0].src  = "audio/soundcut1.mp3";
-	soundarray.push(document.createElement("source")); soundarray[1].type = "audio/mpeg"; soundarray[1].src  = "audio/soundcut2.mp3";
-	soundarray.push(document.createElement("source")); soundarray[2].type = "audio/mpeg"; soundarray[2].src  = "audio/soundcut3.mp3";
-	soundarray.push(document.createElement("source")); soundarray[3].type = "audio/mpeg"; soundarray[3].src  = "audio/soundcut4.mp3";
-	soundarray.push(document.createElement("source")); soundarray[4].type = "audio/mpeg"; soundarray[4].src  = "audio/soundcut5.mp3";
-	soundarray.push(document.createElement("source")); soundarray[5].type = "audio/mpeg"; soundarray[5].src  = "audio/soundcut6.mp3";
-	soundarray.push(document.createElement("source")); soundarray[6].type = "audio/mpeg"; soundarray[6].src  = "audio/soundcut7.mp3";
-	soundarray.push(document.createElement("source")); soundarray[7].type = "audio/mpeg"; soundarray[7].src  = "audio/soundcut8.mp3";
-	soundarray.push(document.createElement("source")); soundarray[8].type = "audio/mpeg"; soundarray[8].src  = "audio/soundcut9.mp3";
-	soundarray.push(document.createElement("source")); soundarray[9].type = "audio/mpeg"; soundarray[9].src  = "audio/soundcut10.mp3";
-	soundarray.push(document.createElement("source")); soundarray[10].type = "audio/mpeg"; soundarray[10].src  = "audio/soundcut11.mp3";
-	soundarray.push(document.createElement("source")); soundarray[11].type = "audio/mpeg"; soundarray[11].src  = "audio/soundcut12.mp3";
-	soundarray.push(document.createElement("source")); soundarray[12].type = "audio/mpeg"; soundarray[12].src  = "audio/soundcut13.mp3";
-	soundarray.push(document.createElement("source")); soundarray[13].type = "audio/mpeg"; soundarray[13].src  = "audio/soundcut14.mp3";
-	soundarray.push(document.createElement("source")); soundarray[14].type = "audio/mpeg"; soundarray[14].src  = "audio/soundcut15.mp3";
-	soundarray.push(document.createElement("source")); soundarray[15].type = "audio/mpeg"; soundarray[15].src  = "audio/soundcut16.mp3";
-	soundarray.push(document.createElement("source")); soundarray[16].type = "audio/mpeg"; soundarray[16].src  = "audio/soundcut17.mp3";
-	soundarray.push(document.createElement("source")); soundarray[17].type = "audio/mpeg"; soundarray[17].src  = "audio/soundcut18.mp3";
-	soundarray.push(document.createElement("source")); soundarray[18].type = "audio/mpeg"; soundarray[18].src  = "audio/soundcut19.mp3";
-	soundarray.push(document.createElement("source")); soundarray[19].type = "audio/mpeg"; soundarray[19].src  = "audio/soundcut20.mp3";
-	soundarray.push(document.createElement("source")); soundarray[20].type = "audio/mpeg"; soundarray[20].src  = "audio/soundcut21.mp3";
-	soundarray.push(document.createElement("source")); soundarray[21].type = "audio/mpeg"; soundarray[21].src  = "audio/soundcut22.mp3";
-	soundarray.push(document.createElement("source")); soundarray[22].type = "audio/mpeg"; soundarray[22].src  = "audio/soundcut23.mp3";
-	soundarray.push(document.createElement("source")); soundarray[23].type = "audio/mpeg"; soundarray[23].src  = "audio/soundcut24.mp3";
-	soundarray.push(document.createElement("source")); soundarray[24].type = "audio/mpeg"; soundarray[24].src  = "audio/soundcut25.mp3";
+	let i = 0;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut1.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut2.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut3.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut4.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut5.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut6.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut7.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut8.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut9.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut10.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut11.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut12.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut13.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut14.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut15.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut16.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut17.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut18.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut19.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut20.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut21.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut22.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut23.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut24.mp3"; i++;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut25.mp3"; i++;
 }
 function handleClick(){
+	if (isFirstClick) {
+		animate(); isFirstClick = false;
+	}
 	ballArray.push(new Balloon());
 	currentNote %= 25;
 	currentNote++;
@@ -220,3 +225,11 @@ function handleClick(){
 	snd1.play();
 }
 
+function drawBloon(index) {
+	var canvas = document.getElementById("drawingcanvas");		
+	var ctx = canvas.getContext("2d");
+	ctx.fillStyle = ballArray[index].color;
+	ctx.beginPath();
+		ctx.ellipse(ballArray[index].x+20, ballArray[index].y-20, ballArray[index].size*20, ballArray[index].size*15, ballArray[index].direction/10 + Math.PI/2, 0, 2 * Math.PI);
+	ctx.fill();
+}
