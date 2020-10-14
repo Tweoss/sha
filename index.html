@@ -76,30 +76,31 @@
 			background-color: #cccccc;
 			color: #666666;
 		}
+		canvas {
+			/* background-color: #274ed0; */
+			/* width: 100%; */
+			/* height: 100%; */
+			display: block;
+		}
+		html, body {
+    /* width: 100%;
+    height: 100%; */
+
+    margin: 0;
+    overflow: hidden;
+}
 	</style>
 </head>
 
-<body>
+<body id="body">
 
 	<input type="text" id="name" autofocus autocomplete="off" maxlength="16000">
 	<!-- <p>Your classics is 33.33% likely to be today.</p> -->
-	<!-- <p>Your birthday is 33.33% likely to be today.</p> -->
+	<p id="chance"></p>
+	<!-- <p id="chance">Your birthday is 33.33% likely to be today.</p> -->
 	<p class="hash" id="hash">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</p>
-	<!-- <button id="celebrate" onclick=celebrate() disabled> Celebrate!</button> -->
+	<button id="celebrate" onclick=celebrate() disabled> Celebrate!</button>
 	<script src="shacalc.js"></script>
-	<!-- <script src="tempsha.js"> -->
-	</script>
-	<script>
-		var array = [1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];
-		let string = "";
-		array.forEach(element => {
-			element = element.toString(16);
-			string += element.toString(16).padStart(8, "0");
-			// console.log(element.toString(16))
-		});
-		// console.log(string)
-		// array.toString(16);
-		// console.log(array);
 	</script>
 </body>
 
