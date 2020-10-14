@@ -16,9 +16,13 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 	.then(results => {
 		var arrayview = new Uint8Array(imports.env.memory.buffer);
 		let h;
+		let date = new Date();
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			textcontent = this.value;
+			//* For Date
+			//* textcontent += date.getDate().toString();
+			//* textcontent += date.getMonth().toString();
 			var utf8 = unescape(encodeURIComponent(textcontent));
 			utf8 += String.fromCharCode(0x80);
 			for (var i = 0; i < utf8.length; i++) {
@@ -28,6 +32,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			for (var j = 0; j < 512 / 8 - (utf8.length + 64 / 8) % (512 / 8); j++) {
 				arrayview[utf8.length + j] = 0;
 			}
+			
 			arrayview[i + j + 0] = 0;
 			arrayview[i + j + 1] = 0;
 			arrayview[i + j + 2] = 0;
@@ -59,11 +64,11 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			document.getElementById('celebrate').disabled = true;
 			document.getElementById('chance').innerText = "Your class is " + chances + "% likely to be today.";
 			// document.getElementById('chance').innerText = "Your birthday is " + chances + "% likely to be today.";
-			//* if (string == "9109e41ae83377b1c7c53ad1e002a319adeddf75bf19e324f880ac53bdebc932")	{		
+			if (string == "9109e41ae83377b1c7c53ad1e002a319adeddf75bf19e324f880ac53bdebc932")	{		
 				document.getElementById('celebrate').disabled = false;
 				document.getElementById('chance').innerText = "Your class is 100.00% likely to be today.";
 				// document.getElementById('chance').innerText = "Your birthday is 100.00% likely to be today.";
-			//* }
+			}
 		}
 		document.getElementById("name").addEventListener('input', input);
 		document.getElementById("name").addEventListener('keyup', function (event) {
@@ -187,6 +192,7 @@ let soundarray = [];
 
 { //* Create the sound sources
 	let i = 0;
+	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut1.mp3"; i++;
 	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut1.mp3"; i++;
 	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut2.mp3"; i++;
 	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut3.mp3"; i++;
