@@ -63,7 +63,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			chances = "00" + chances; chances = chances.substring(chances.length-5,7);
 			document.getElementById("hash").innerText = string;
 			document.getElementById('celebrate').disabled = true;
-			document.getElementById('chance').innerText = "Your class is " + chances + "% likely to be today.";
+			document.getElementById('chance').innerText = "Your birthday is " + chances + "% likely to be today.";
 			// document.getElementById('chance').innerText = "Your birthday is " + chances + "% likely to be today.";
 			if (string == "4f8cfe691dd88c3c6ac159f4ca57ec9a729109381eff52af6e4b1894bebc5e21")	{		
 				activate();
@@ -86,9 +86,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 function activate() {
 	document.getElementById('celebrate').disabled = false;
 	document.getElementById('chance').innerText = "Your birthday is 100.00% likely to be today.";
-	// document.getElementById('chance').innerText = "Your class is 100.00% likely to be today.";
 }
-let h = 0.321031;
+let h = Math.random();
 class Balloon {
 	constructor() {
 		var canvas = document.getElementById("drawingcanvas");
