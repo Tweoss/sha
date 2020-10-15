@@ -15,7 +15,6 @@ const imports = {
 WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 	.then(results => {
 		var arrayview = new Uint8Array(imports.env.memory.buffer);
-		let h;
 		let date = new Date();
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
@@ -23,6 +22,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			//* For Date
 			//* textcontent += date.getDate().toString();
 			//* textcontent += date.getMonth().toString();
+			textcontent += date.getDate().toString();
+			textcontent += date.getMonth().toString();
 			var utf8 = unescape(encodeURIComponent(textcontent));
 			utf8 += String.fromCharCode(0x80);
 			for (var i = 0; i < utf8.length; i++) {
@@ -64,25 +65,29 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			document.getElementById('celebrate').disabled = true;
 			document.getElementById('chance').innerText = "Your class is " + chances + "% likely to be today.";
 			// document.getElementById('chance').innerText = "Your birthday is " + chances + "% likely to be today.";
-			if (string == "9109e41ae83377b1c7c53ad1e002a319adeddf75bf19e324f880ac53bdebc932")	{		
-				document.getElementById('celebrate').disabled = false;
-				document.getElementById('chance').innerText = "Your class is 100.00% likely to be today.";
-				// document.getElementById('chance').innerText = "Your birthday is 100.00% likely to be today.";
+			if (string == "4f8cfe691dd88c3c6ac159f4ca57ec9a729109381eff52af6e4b1894bebc5e21")	{		
+				activate();
+			}
+			else if (string == "341e1d53fdf23d00bc30d4edf9c74b014757b3fce14eaed9c50b5ff3d62d9f4a") {
+				activate();
 			}
 		}
 		document.getElementById("name").addEventListener('input', input);
 		document.getElementById("name").addEventListener('keyup', function (event) {
 			// Number 13 is the "Enter" key on the keyboard
 			if (event.key === "Enter") {
-				// Cancel the default action, if needed
 				event.preventDefault();
-				// Trigger the button element with a click
 				document.getElementById("celebrate").click();
 			  }
 		}
 		);
 	}
 	);
+function activate() {
+	document.getElementById('celebrate').disabled = false;
+	document.getElementById('chance').innerText = "Your birthday is 100.00% likely to be today.";
+	// document.getElementById('chance').innerText = "Your class is 100.00% likely to be today.";
+}
 let h = 0.321031;
 class Balloon {
 	constructor() {
@@ -94,7 +99,6 @@ class Balloon {
 		this.size = Math.random()*1+2;
 		this.direction = Math.random()*3-1;
 		this.acceleration = 0;
-		this.jerk = 0;
 		this.upspeed = Math.random()*3+2;
 	}
 	move() {
@@ -154,7 +158,7 @@ function celebrate(text) {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	var my_gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-	my_gradient.addColorStop(0, "#4f68ba");
+	my_gradient.addColorStop(0, "#7288ce");
 	my_gradient.addColorStop(1, "#274ed0");
 	ctx.fillStyle = my_gradient;
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
