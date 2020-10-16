@@ -22,9 +22,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			"5c6487ce85a49a76b2a7cb4756e95dcbb176558c16a8dde103013f9dcf714496",
 			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb"
 		]
-		let hashtemp = [ //* Apply for 10/15
-			"341e1d53fdf23d00bc30d4edf9c74b014757b3fce14eaed9c50b5ff3d62d9f4a",
-			"06f1eec9702f4180ab1f344944555f432aebf8608c5745a98f304038f7ace7af"
+		let hashtemp = [ //* Apply for 10/16
+			"62b225b8bbdd28c208375dbe9a18316e6166b6c6e41dfb899ed475f7cffb3b5a",
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
