@@ -16,6 +16,13 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 	.then(results => {
 		var arrayview = new Uint8Array(imports.env.memory.buffer);
 		let date = new Date();
+		let hashes = [
+			"4f8cfe691dd88c3c6ac159f4ca57ec9a729109381eff52af6e4b1894bebc5e21",
+		]
+		let hashtemp = [
+			"341e1d53fdf23d00bc30d4edf9c74b014757b3fce14eaed9c50b5ff3d62d9f4a",
+			"06f1eec9702f4180ab1f344944555f432aebf8608c5745a98f304038f7ace7af"
+		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			textcontent = this.value;
@@ -64,11 +71,10 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			document.getElementById("hash").innerText = string;
 			document.getElementById('celebrate').disabled = true;
 			document.getElementById('chance').innerText = "Your birthday is " + chances + "% likely to be today.";
-			// document.getElementById('chance').innerText = "Your birthday is " + chances + "% likely to be today.";
-			if (string == "4f8cfe691dd88c3c6ac159f4ca57ec9a729109381eff52af6e4b1894bebc5e21")	{		
+			if (hashes.includes(string)) {
 				activate();
 			}
-			else if (string == "341e1d53fdf23d00bc30d4edf9c74b014757b3fce14eaed9c50b5ff3d62d9f4a") {
+			else if (hashtemp.includes(string)) {
 				activate();
 			}
 		}
@@ -145,6 +151,7 @@ function hsv_to_rgb(h, s, v) {
 }
 var ballArray = [];
 let isFirstClick = true;
+let seePersonal = false;
 function celebrate(text) {
 	document.getElementById("name").remove();
 	document.getElementById("chance").remove();
