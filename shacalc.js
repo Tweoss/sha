@@ -18,8 +18,11 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 		let date = new Date();
 		let hashes = [
 			"4f8cfe691dd88c3c6ac159f4ca57ec9a729109381eff52af6e4b1894bebc5e21",
+			"8c20f6916329579479175dac2ad9105e52db39d8da9182bfeb96e5abe9f37ad6",
+			"5c6487ce85a49a76b2a7cb4756e95dcbb176558c16a8dde103013f9dcf714496",
+			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb"
 		]
-		let hashtemp = [
+		let hashtemp = [ //* Apply for 10/15
 			"341e1d53fdf23d00bc30d4edf9c74b014757b3fce14eaed9c50b5ff3d62d9f4a",
 			"06f1eec9702f4180ab1f344944555f432aebf8608c5745a98f304038f7ace7af"
 		]
@@ -31,6 +34,11 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			//* textcontent += date.getMonth().toString();
 			textcontent += date.getDate().toString();
 			textcontent += date.getMonth().toString();
+			//* generate hash
+			// let month = 4;
+			// let day = 16;
+			// textcontent += (day).toString(); textcontent += (month-1).toString();
+
 			var utf8 = unescape(encodeURIComponent(textcontent));
 			utf8 += String.fromCharCode(0x80);
 			for (var i = 0; i < utf8.length; i++) {
