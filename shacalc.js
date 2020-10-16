@@ -111,13 +111,15 @@ class Balloon {
 		this.size = Math.random()*1+2;
 		this.direction = Math.random()*3-1;
 		this.acceleration = 0;
-		this.upspeed = Math.random()*3+2;
+		this.jerk = 0;
+		this.upspeed = Math.random()*3+1;
 	}
 	move() {
 		var canvas = document.getElementById("drawingcanvas");
-		this.x += this.direction;
-		this.direction += .4*this.acceleration;
-		this.acceleration = Math.random() - 0.5;
+		this.x += .8*this.direction;
+		this.direction += .01*this.acceleration - .4*this.jerk;
+		this.acceleration += .4* this.jerk;
+		this.jerk = Math.random() - 0.5;
 		this.x %= canvas.width;
 		this.y -= this.upspeed;
 	}
@@ -235,6 +237,11 @@ let soundarray = [];
 	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut23.mp3"; i++;
 	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut24.mp3"; i++;
 	soundarray.push(document.createElement("source")); soundarray[i].type = "audio/mpeg"; soundarray[i].src  = "audio/soundcut25.mp3"; i++;
+	for (let index = 0; index < soundarray.length; index++) {
+		soundarray[index].volume = 0;
+		
+	}
+	// document.querySelectorAll('video, audio, embed, object').forEach(element => element.volume = 0)
 }
 function handleClick(){
 	if (isFirstClick) {
@@ -245,6 +252,7 @@ function handleClick(){
 	currentNote++;
 	var snd1  = new Audio();
 	snd1.appendChild(soundarray[currentNote]);
+	snd1.volume = 0.2;
 	snd1.play();
 }
 
