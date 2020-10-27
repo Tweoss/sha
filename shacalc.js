@@ -311,10 +311,8 @@ function drawBloon(index) {
 let shouldGenDownload = false;
 function loadJs(hash,saltedHashArray) {
 	hash = hash.substr(0,8);
-	console.log("First 8 characters of hash", "encrypted" + hash);
+	//* TO GENERATE AN ENCRYPTED FILE
 	// fetch("encrypt" + hash + ".js")
-	// fetch("encrypt" + hash)
-	// fetch("encrypted" + hash + ".bin")
 	fetch("encrypted" + hash)
 		.then(response => response.arrayBuffer())
 		.then((buffer) => {
@@ -322,14 +320,10 @@ function loadJs(hash,saltedHashArray) {
 			var contentArray = new Uint8Array(buffer);
 			console.log(contentArray);
 			console.log("saltedHashArray",saltedHashArray);
-			// let i = 0; let j = 0;
 			for (let index = 0; index < buffer.byteLength; index++) {
-				// console.log("changing",contentArray[index]);
 				contentArray[index] = contentArray[index] ^ saltedHashArray[index%32];
-				// console.log("to",contentArray[index]);
 			}
 			if (shouldGenDownload) {
-				// const blob = new Blob(buffer);
 				var a = document.createElement("a");
 				document.body.appendChild(a);
 				a.style = "display: none";
@@ -347,10 +341,5 @@ function loadJs(hash,saltedHashArray) {
 				console.log(script.text);
 				document.head.appendChild(script);
 			}
-			// console.log(enc.decode(buffer));
-			// function executeString(string){
-			// 	return Function('"use strict";return (' + string + ')')();
-			// }
-				
 		})
 }
