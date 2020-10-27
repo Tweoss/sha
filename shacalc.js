@@ -28,7 +28,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
-			let salt = "˙åµ∑lœøˆå≈m,abcd1234$1@"
+			let salt = "abcd1234-9+31204zqlop"
 			textcontent = this.value;
 			//* Concatenate the date
 			textcontent += date.getDate().toString();
