@@ -1,6 +1,6 @@
 {
-	"name": "",
-	"sha_birthdays": "",
+	"name": "Hashing for Birthday Verification",
+	"short_name": "hash",
 	"icons": [
 		{
 			"src": "/android-chrome-192x192.png",
@@ -9,6 +9,11 @@
 		},
 		{
 			"src": "/android-chrome-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon/apple-touch-icon.png",
 			"sizes": "512x512",
 			"type": "image/png"
 		}
