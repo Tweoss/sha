@@ -24,7 +24,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb"
 		]
 		let hashtemp = [ //* Apply for 10/26
-			"f57dd1d5eaf2b81172736c59ae0c7e15463e92af33eb4bce65ec5bc3a83d6c91",
+			"96fcb226d49fd1ee0c97e85024e64d976350c92fc34dfa18ee26f08662cc01ad",
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
@@ -289,7 +289,7 @@ function handleClick(e) {
 	ballArray.push(new Balloon());
 	if (x/(canvas.width) < 0.1 && y/(canvas.height) < 0.1) {
 		document.getElementById("drawingcanvas").remove;
-		loadJs("f57dd1d5eaf2b81172736c59ae0c7e15463e92af33eb4bce65ec5bc3a83d6c91",saltedHashArray);
+		loadJs(hash,saltedHashArray);
 	}
 	currentNote %= 25;
 	currentNote++;
@@ -309,7 +309,7 @@ function drawBloon(index) {
 }
 
 let shouldGenDownload = false;
-let testingWithoutEncrypt = true;
+let testingWithoutEncrypt = false;
 function loadJs(hash,saltedHashArray) {
 	hash = hash.substr(0,8);
 	if (testingWithoutEncrypt) {
