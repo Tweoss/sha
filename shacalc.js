@@ -23,7 +23,7 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			"5c6487ce85a49a76b2a7cb4756e95dcbb176558c16a8dde103013f9dcf714496",
 			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb"
 		]
-		let hashtemp = [ //* Apply for 10/17
+		let hashtemp = [ //* Apply for 10/26
 			"f57dd1d5eaf2b81172736c59ae0c7e15463e92af33eb4bce65ec5bc3a83d6c91",
 		]
 		function input(e) {
@@ -196,7 +196,6 @@ function hsv_to_rgb(h, s, v) {
 }
 var ballArray = [];
 let isFirstClick = true;
-// // let seePersonal = false;
 function celebrate(text) {
 	document.getElementById("name").remove();
 	document.getElementById("chance").remove();
@@ -308,38 +307,52 @@ function drawBloon(index) {
 	ctx.ellipse(ballArray[index].x + 20, ballArray[index].y - 20, ballArray[index].size * 20, ballArray[index].size * 15, ballArray[index].direction / 10 + Math.PI / 2, 0, 2 * Math.PI);
 	ctx.fill();
 }
+
 let shouldGenDownload = false;
+let testingWithoutEncrypt = true;
 function loadJs(hash,saltedHashArray) {
 	hash = hash.substr(0,8);
-	//* TO GENERATE AN ENCRYPTED FILE
-	// fetch("encrypt" + hash + ".js")
-	fetch("encrypted" + hash)
-		.then(response => response.arrayBuffer())
-		.then((buffer) => {
-			var enc = new TextDecoder("utf-8");
-			var contentArray = new Uint8Array(buffer);
-			console.log(contentArray);
-			console.log("saltedHashArray",saltedHashArray);
-			for (let index = 0; index < buffer.byteLength; index++) {
-				contentArray[index] = contentArray[index] ^ saltedHashArray[index%32];
-			}
-			if (shouldGenDownload) {
-				var a = document.createElement("a");
-				document.body.appendChild(a);
-				a.style = "display: none";
-				var blob = new Blob([contentArray], {type: "application/octet-stream"});
-				console.log(blob);
-				var url = window.URL.createObjectURL(blob);
-				a.href = url;
-				a.click();
-				window.URL.revokeObjectURL(url);
-				a.remove();
-			}
-			else {
-				var script = document.createElement('script');
-				script.text = enc.decode(buffer);
-				console.log(script.text);
-				document.head.appendChild(script);
-			}
+	if (testingWithoutEncrypt) {
+		fetch("encrypt" + hash + ".js").then(response =>  response.text())
+		.then((data) => {
+			var script = document.createElement('script');
+			script.text = data;
+			console.log(script.text);
+			document.head.appendChild(script);
 		})
+	}
+	else {
+		//* TO GENERATE AN ENCRYPTED FILE
+		// fetch("encrypt" + hash + ".js")
+		fetch("encrypted" + hash)
+			.then(response => response.arrayBuffer())
+			.then((buffer) => {
+				var enc = new TextDecoder("utf-8");
+				var contentArray = new Uint8Array(buffer);
+				console.log(contentArray);
+				console.log("saltedHashArray",saltedHashArray);
+				for (let index = 0; index < buffer.byteLength; index++) {
+					contentArray[index] = contentArray[index] ^ saltedHashArray[index%32];
+				}
+				if (shouldGenDownload) {
+					var a = document.createElement("a");
+					document.body.appendChild(a);
+					a.style = "display: none";
+					var blob = new Blob([contentArray], {type: "application/octet-stream"});
+					console.log(blob);
+					var url = window.URL.createObjectURL(blob);
+					a.href = url;
+					a.click();
+					window.URL.revokeObjectURL(url);
+					a.remove();
+				}
+				else {
+					var script = document.createElement('script');
+					script.text = enc.decode(buffer);
+					console.log(script.text);
+					document.head.appendChild(script);
+				}
+			})
+	}
+		
 }
