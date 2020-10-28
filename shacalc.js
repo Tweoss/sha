@@ -291,12 +291,15 @@ function handleClick(e) {
 		document.getElementById("drawingcanvas").remove;
 		loadJs(hash,saltedHashArray);
 	}
-	currentNote %= 25;
-	currentNote++;
-	var snd1 = new Audio();
-	snd1.appendChild(soundarray[currentNote]);
-	snd1.volume = 0.2;
-	snd1.play();
+	else {
+		currentNote %= 25;
+		currentNote++;
+		var snd1 = new Audio();
+		snd1.appendChild(soundarray[currentNote]);
+		snd1.volume = 0.2;
+		snd1.play();
+		
+	}
 }
 
 function drawBloon(index) {
