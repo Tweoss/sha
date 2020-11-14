@@ -34,12 +34,12 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			let salt = "abcd1234-9+31204zqlop"
 			textcontent = this.value;
 			//* Concatenate the date
-			// textcontent += date.getDate().toString();
-			// textcontent += date.getMonth().toString();
+			textcontent += date.getDate().toString();
+			textcontent += date.getMonth().toString();
 			//* generate hash
-			let month = 11;
-			let day = 17;
-			textcontent += (day).toString(); textcontent += (month-1).toString();
+			// let month = 11;
+			// let day = 17;
+			// textcontent += (day).toString(); textcontent += (month-1).toString();
 			var i, j;
 			{ //? Preprocessing
 				var utf8 = unescape(encodeURIComponent(textcontent));
