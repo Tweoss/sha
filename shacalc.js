@@ -15,28 +15,31 @@ const imports = {
 let hash; let saltedHashArray = new Uint8Array(32);
 WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 	.then(results => {
+		document.getElementById("name").value = "FULL NAME"; document.getElementById("name").setSelectionRange(0, 9);
+
 		var arrayview = new Uint8Array(imports.env.memory.buffer);
 		let date = new Date();
 		let hashes = [
 			"4f8cfe691dd88c3c6ac159f4ca57ec9a729109381eff52af6e4b1894bebc5e21",
 			"8c20f6916329579479175dac2ad9105e52db39d8da9182bfeb96e5abe9f37ad6",
 			"5c6487ce85a49a76b2a7cb4756e95dcbb176558c16a8dde103013f9dcf714496",
-			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb"
+			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb",
+			"ee3ad8cb6506a130b57d7a82a2c85a648da3cde5f13a56dcff6e1cb83e824c17",
 		]
-		let hashtemp = [ //* Apply for 10/26
-			"96fcb226d49fd1ee0c97e85024e64d976350c92fc34dfa18ee26f08662cc01ad",
+		let hashtemp = [ //* Apply for 10/28
+			"9470d9642d67fcf95560ab39e61009aac16f5f1cf284194f2db441c28b57ec07",
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
 			let salt = "abcd1234-9+31204zqlop"
 			textcontent = this.value;
 			//* Concatenate the date
-			textcontent += date.getDate().toString();
-			textcontent += date.getMonth().toString();
+			// textcontent += date.getDate().toString();
+			// textcontent += date.getMonth().toString();
 			//* generate hash
-			// let month = 4;
-			// let day = 16;
-			// textcontent += (day).toString(); textcontent += (month-1).toString();
+			let month = 11;
+			let day = 17;
+			textcontent += (day).toString(); textcontent += (month-1).toString();
 			var i, j;
 			{ //? Preprocessing
 				var utf8 = unescape(encodeURIComponent(textcontent));
@@ -153,8 +156,8 @@ class Balloon {
 	move() {
 		var canvas = document.getElementById("drawingcanvas");
 		this.x += .8 * this.direction;
-		this.direction += .01 * this.acceleration - .4 * this.jerk;
-		this.acceleration += .4 * this.jerk;
+		this.direction += .01 * this.acceleration;
+		this.acceleration += .4 * this.jerk - 1/2* 1 * this.direction ^ 2 * 0.5 * 1;
 		this.jerk = Math.random() - 0.5;
 		this.x %= canvas.width;
 		this.y -= this.upspeed;
@@ -312,7 +315,7 @@ function drawBloon(index) {
 }
 
 let shouldGenDownload = false;
-let testingWithoutEncrypt = false;
+let testingWithoutEncrypt = true;
 function loadJs(hash,saltedHashArray) {
 	hash = hash.substr(0,8);
 	if (testingWithoutEncrypt) {
