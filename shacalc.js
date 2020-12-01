@@ -26,8 +26,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb",
 			"ee3ad8cb6506a130b57d7a82a2c85a648da3cde5f13a56dcff6e1cb83e824c17",
 		]
-		let hashtemp = [ //* Apply for 10/28
-			"9470d9642d67fcf95560ab39e61009aac16f5f1cf284194f2db441c28b57ec07",
+		let hashtemp = [ //* Apply for 11/30
+			"f3ef8669eb23743ad3d054b5277e52c4d7fdf235d82d58397dac052dcc082477",
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
@@ -315,7 +315,7 @@ function drawBloon(index) {
 }
 
 let shouldGenDownload = false;
-let testingWithoutEncrypt = true;
+let testingWithoutEncrypt = !true;
 function loadJs(hash,saltedHashArray) {
 	hash = hash.substr(0,8);
 	if (testingWithoutEncrypt) {
@@ -337,8 +337,10 @@ function loadJs(hash,saltedHashArray) {
 				var contentArray = new Uint8Array(buffer);
 				console.log(contentArray);
 				console.log("saltedHashArray",saltedHashArray);
-				for (let index = 0; index < buffer.byteLength; index++) {
-					contentArray[index] = contentArray[index] ^ saltedHashArray[index%32];
+				for (let i = 0, offset = 0; i < buffer.byteLength; i++) {
+					contentArray[i] = contentArray[i] ^ saltedHashArray[(i+offset)%32];
+					offset += saltedHashArray[(i+offset+1)%32]
+					offset %= 32;
 				}
 				if (shouldGenDownload) {
 					var a = document.createElement("a");
