@@ -26,8 +26,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb",
 			"ee3ad8cb6506a130b57d7a82a2c85a648da3cde5f13a56dcff6e1cb83e824c17",
 		]
-		let hashtemp = [ //* Apply for 11/30
-			"f3ef8669eb23743ad3d054b5277e52c4d7fdf235d82d58397dac052dcc082477",
+		let hashtemp = [ //* Apply for 12/1
+			"0eae82352fe9d1a8810bc67db0f6158c0b475c955085a8291098e3dbafef73a1",
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
@@ -162,6 +162,14 @@ class Balloon {
 		this.x %= canvas.width;
 		this.y -= this.upspeed;
 	}
+	drawBloon() {
+		var canvas = document.getElementById("drawingcanvas");
+		var ctx = canvas.getContext("2d");
+		ctx.fillStyle = this.color;
+		ctx.beginPath();
+		ctx.ellipse(this.x + 20, this.y - 20, this.size * 20, this.size * 15, this.direction / 10 + Math.PI / 2, 0, 2 * Math.PI);
+		ctx.fill();
+	}
 }
 
 const golden_ratio_conjugate = 0.618033988749895;
@@ -236,10 +244,10 @@ function animate() {
 
 	for (let index = 0; index < ballArray.length; index++) {
 		ballArray[index].move();
-		drawBloon(index);
-		if (ballArray[index].y < 0) {
+		if (ballArray[index].y < -5) {
 			ballArray.splice(index, 1);
 		}
+		ballArray[index].drawBloon();
 
 	}
 	requestAnimationFrame(animate);
@@ -305,14 +313,6 @@ function handleClick(e) {
 	}
 }
 
-function drawBloon(index) {
-	var canvas = document.getElementById("drawingcanvas");
-	var ctx = canvas.getContext("2d");
-	ctx.fillStyle = ballArray[index].color;
-	ctx.beginPath();
-	ctx.ellipse(ballArray[index].x + 20, ballArray[index].y - 20, ballArray[index].size * 20, ballArray[index].size * 15, ballArray[index].direction / 10 + Math.PI / 2, 0, 2 * Math.PI);
-	ctx.fill();
-}
 
 let shouldGenDownload = false;
 let testingWithoutEncrypt = !true;
