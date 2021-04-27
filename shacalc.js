@@ -25,9 +25,10 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			"5c6487ce85a49a76b2a7cb4756e95dcbb176558c16a8dde103013f9dcf714496",
 			"bc4112f8099662d92b61f1b6961cc8e8d44b45685ecf5e227917f8af7db5adbb",
 			"ee3ad8cb6506a130b57d7a82a2c85a648da3cde5f13a56dcff6e1cb83e824c17",
+			"74bcfca45e3055f8a996992a5ba09d91b22962aa40178e92a6039753543ac90f",
 		]
-		let hashtemp = [ //* Apply for 12/1
-			"0eae82352fe9d1a8810bc67db0f6158c0b475c955085a8291098e3dbafef73a1",
+		let hashtemp = [ //* Apply for 12/17
+			"93ca155098777c3883ce2489203df54c5caa824b4a71c6ac39975cc702a2274f",
 		]
 		function input(e) {
 			let p = this.selectionStart; this.value = this.value.toUpperCase(); this.setSelectionRange(p, p);
@@ -37,8 +38,8 @@ WebAssembly.instantiateStreaming(fetch('shacalc.wasm'), imports)
 			textcontent += date.getDate().toString();
 			textcontent += date.getMonth().toString();
 			//* generate hash
-			// let month = 11;
-			// let day = 17;
+			// let month = 4;
+			// let day = 28;
 			// textcontent += (day).toString(); textcontent += (month-1).toString();
 			var i, j;
 			{ //? Preprocessing
